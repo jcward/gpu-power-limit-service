@@ -29,7 +29,7 @@ trap 'echo "❌  Error on line $LINENO: $BASH_COMMAND" >&2' ERR
 
 err() { echo "❌  $1" >&2; exit 1; }
 
-command -v systemctl >/dev/null 2>&1 || err "systemctl not found – this host does not use systemd."
+command -v systemctl >/dev/null 2>&1 || err "systemctl not found - this host does not use systemd."
 [[ -n "$NVIDIA_SMI" ]] || err "nvidia-smi not found in \$PATH."
 
 # ---------- gather GPU info --------------------------------------------------
@@ -113,7 +113,7 @@ uninstall_service() {
     sudo systemctl daemon-reload
     echo "✅  Service removed."
   else
-    echo "Service file not found – nothing to uninstall."
+    echo "Service file not found - nothing to uninstall."
   fi
   echo -e "\nTo restore factory power limits, run:"
   for line in "${GPU_INFO[@]}"; do
