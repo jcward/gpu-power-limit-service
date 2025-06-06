@@ -65,9 +65,32 @@ GPU0  42W
 Goodbye!
 ```
 
-## Related helpful commands:
+## Helpful Related Info
 
-These are here for reference, for manual testing and probing. The service automates these settings.
+This info is here just for reference, for manual testing and probing. The script
+automates these settings.
 
-`sudo nvidia-smi -q -d POWER` - show current power settings
-`sudo nvidia-smi -i 0 -pl 250` - manually set the power for GPU 0 to 250 watts
+Commands:
+
+```
+sudo nvidia-smi -q -d POWER    # show current power settings
+sudo nvidia-smi -i 0 -pl 250   # manually set the power for GPU 0 to 250 watts
+```
+
+And a sample of the unit file generated:
+
+```
+[Unit]
+Description=GPU power limiter
+After=network.target
+
+[Service]
+User=root
+Type=oneshot
+Restart=never
+RemainAfterExit=yes
+ExecStart=/usr/bin/bash -c "/usr/bin/nvidia-smi -i 0 -pl 205"
+
+[Install]
+WantedBy=multi-user.target
+```

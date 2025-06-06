@@ -85,13 +85,12 @@ install_service() {
 [Unit]
 Description=GPU power limiter
 After=network.target
-StartLimitIntervalSec=0
 
 [Service]
 User=root
-Type=simple
-Restart=always
-RestartSec=1
+Type=oneshot
+Restart=never
+RemainAfterExit=yes
 ExecStart=/usr/bin/bash -c "$CMD_CHAIN"
 
 [Install]
