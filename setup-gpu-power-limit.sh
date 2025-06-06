@@ -53,8 +53,9 @@ menu() {
   echo "===== GPU Power‑Limit Service ====="
   echo "1) Install or update $SERVICE_NAME"
   echo "2) Uninstall $SERVICE_NAME"
-  echo "3) Exit"
-  read -rp "Choose an option [1‑3]: " CHOICE
+  echo "3) Monitor draw"
+  echo "4) Exit"
+  read -rp "Choose an option [1‑4]: " CHOICE
   echo
 }
 
@@ -123,13 +124,45 @@ uninstall_service() {
   done
 }
 
+# ---------- monitor the power draw of the GPUs -------------------------------
+monitor_draw() {
+  echo -e "\nPress ESC to exit..."
+  local old_tty=$(stty -g)          # save tty state
+  stty -echo -icanon time 0 min 0    # non‑blocking, no echo
+
+  while true; do
+    # query current draw (watts) for every GPU
+    mapfile -t DRAW < <(
+      "$NVIDIA_SMI" --query-gpu=index,power.draw --format=csv,noheader,nounits
+    )
+
+    # build a single status line
+    local line=""
+    for entry in "${DRAW[@]}"; do
+      IFS=',' read -r IDX W <<<"$entry"
+      W=${W%%.*}                     # strip decimals
+      line+="GPU${IDX} ${W}W "
+    done
+    printf "\r%-60s" "$line"        # overwrite same line (fallback: scrolls)
+
+    # exit when ESC pressed
+    if read -rsn1 -t 0.25 key && [[ $key == $'\e' ]]; then
+      break
+    fi
+  done
+
+  stty "$old_tty"                   # restore tty
+  echo                              # move to next line
+}
+
 # ---------- main loop --------------------------------------------------------
 while true; do
   menu
   case "$CHOICE" in
     1) install_service ;;
     2) uninstall_service ;;
-    3) echo "Goodbye!"; exit 0 ;;
+    3) monitor_draw    ;;
+    4) echo "Goodbye!"; exit 0 ;;
     *) echo "Invalid choice." ;;
   esac
   echo

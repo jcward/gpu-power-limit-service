@@ -16,13 +16,15 @@ service to set and maintain your desired power limits at boot.
 
 - **Generates a systemd unit** (`gpu-power-limit.service`) that applies your chosen limits on every boot.
 
+- **Monitor option** displays the current power draw of all GPUs.
+
 - **Uninstall option** cleanly stops, disables, and removes the service.
 
 - Optional `--debug` flag turns on bash tracing and prints the exact line on any error for quick troubleshooting.
 
 ## Example Setup
 
-The script is interactive - here's an aexample of the interaction:
+The script is interactive - here's an example interaction:
 
 ```
 user@server:# ./setup-gpu-power-limit.sh
@@ -32,8 +34,9 @@ Detected NVIDIA GPUs and power limits:
 ===== GPU Power-Limit Service =====
 1) Install or update gpu-power-limit.service
 2) Uninstall gpu-power-limit.service
-3) Exit
-Choose an option [1-3]: 1
+3) Monitor draw
+4) Exit
+Choose an option [1-4]: 1
 
 NOTE: setting power limits requires sudo privileges.
 Enter new power limit for GPU0 (W,  100- 350): 205
@@ -45,8 +48,19 @@ Created symlink /etc/systemd/system/multi-user.target.wants/gpu-power-limit.serv
 ===== GPU Power-Limit Service =====
 1) Install or update gpu-power-limit.service
 2) Uninstall gpu-power-limit.service
-3) Exit
-Choose an option [1-3]: 3
+3) Monitor draw
+4) Exit
+Choose an option [1-4]: 3
+
+
+Press ESC to exit...
+GPU0  42W                                                   
+
+===== GPU Power-Limit Service =====
+1) Install or update gpu-power-limit.service
+2) Uninstall gpu-power-limit.service
+3) Monitor draw
+4) Exit
 
 Goodbye!
 ```
